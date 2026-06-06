@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TARUN.DEV | GitHub Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Fira+Code:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0e1a;
+      --bg2: #0d1117;
+      --surface: #0f1521;
+      --border: rgba(88,166,255,0.12);
+      --accent1: #58a6ff;
+      --accent2: #00e87a;
+      --accent3: #f78166;
+      --accent4: #a371f7;
+      --text: #e6edf3;
+      --text2: #7d8590;
+      --fd: 'Orbitron', monospace;
+      --fc: 'Fira Code', monospace;
+      --fb: 'Syne', sans-serif;
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--text);font-family:var(--fb);overflow-x:hidden;cursor:none}
+
+    /* CURSOR */
+    #cursor{position:fixed;width:10px;height:10px;background:var(--accent1);border-radius:50%;pointer-events:none;z-index:10000;mix-blend-mode:screen;transition:transform 0.15s ease}
+    #cursor-ring{position:fixed;width:34px;height:34px;border:1.5px solid var(--accent1);border-radius:50%;pointer-events:none;z-index:9999;opacity:0.5;transition:width 0.3s,height 0.3s,border-color 0.3s}
+
+    /* PROGRESS BAR */
+    #progress{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--accent1),var(--accent4),var(--accent2));z-index:9998}
+
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:22px 64px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(24px);background:rgba(10,14,26,0.55);border-bottom:1px solid var(--border);transition:padding 0.3s,background 0.3s}
+    nav.scrolled{padding:13px 64px;background:rgba(10,14,26,0.97)}
+    .nav-logo{font-family:var(--fd);font-weight:900;font-size:1.1rem;letter-spacing:4px;background:linear-gradient(120deg,var(--accent1),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .nav-links{display:flex;gap:40px;list-style:none}
+    .nav-links a{color:var(--text2);text-decoration:none;font-family:var(--fc);font-size:0.82rem;letter-spacing:1px;transition:color 0.3s;position:relative}
+    .nav-links a span{color:var(--accent2);font-size:0.68rem;margin-right:5px}
+    .nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;width:0;height:1px;background:var(--accent1);transition:width 0.3s}
+    .nav-links a:hover{color:var(--text)}
+    .nav-links a:hover::after{width:100%}
+    .nav-btn{background:transparent;border:1px solid var(--accent1);color:var(--accent1);padding:8px 22px;border-radius:4px;font-family:var(--fc);font-size:0.78rem;cursor:none;transition:all 0.3s;letter-spacing:1px}
+    .nav-btn:hover{background:var(--accent1);color:var(--bg);box-shadow:0 0 24px rgba(88,166,255,0.4)}
+
+    /* HERO */
+    #hero{position:relative;height:100vh;display:flex;align-items:center;overflow:hidden}
+    #hero-canvas{position:absolute;inset:0;z-index:0}
+    .hero-content{position:relative;z-index:2;padding:0 64px;max-width:950px}
+    .hero-label{font-family:var(--fc);color:var(--accent2);font-size:0.8rem;letter-spacing:5px;margin-bottom:28px;opacity:0;animation:fadeUp 0.8s 0.2s forwards}
+    .hero-title{font-family:var(--fd);font-size:clamp(2.4rem,5.5vw,5rem);font-weight:900;line-height:1.08;letter-spacing:-1px;margin-bottom:28px;opacity:0;animation:fadeUp 0.8s 0.45s forwards}
+    .hero-title .t1{color:var(--text);display:block}
+    .hero-title .t2{display:block;background:linear-gradient(135deg,var(--accent1) 0%,var(--accent4) 45%,var(--accent2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200%;animation:gshift 5s ease infinite}
+    @keyframes gshift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+    .glitch{position:relative;display:inline-block}
+    .glitch::before,.glitch::after{content:attr(data-text);position:absolute;top:0;left:0;background:linear-gradient(135deg,var(--accent1),var(--accent4),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .glitch::before{animation:g1 4s infinite}
+    .glitch::after{animation:g2 4s infinite}
+    @keyframes g1{0%,88%,100%{transform:translate(0);clip-path:inset(0)}89%{transform:translate(-3px,1px);clip-path:inset(20% 0 55% 0)}91%{transform:translate(2px,-2px);clip-path:inset(60% 0 20% 0)}93%{transform:translate(-1px,0);clip-path:inset(35% 0 40% 0)}}
+    @keyframes g2{0%,84%,100%{transform:translate(0);clip-path:inset(0)}85%{transform:translate(4px,-2px);clip-path:inset(30% 0 45% 0)}87%{transform:translate(-3px,1px);clip-path:inset(70% 0 10% 0)}}
+    .hero-sub{font-family:var(--fc);font-size:1.05rem;color:var(--text2);margin-bottom:20px;opacity:0;animation:fadeUp 0.8s 0.7s forwards}
+    .type-cursor{color:var(--accent2);border-right:2px solid var(--accent2);animation:blink 0.75s infinite}
+    @keyframes blink{0%,100%{border-color:var(--accent2)}50%{border-color:transparent}}
+    .hero-desc{color:var(--text2);font-size:1rem;max-width:520px;line-height:1.85;margin-bottom:52px;opacity:0;animation:fadeUp 0.8s 0.9s forwards}
+    .hero-btns{display:flex;gap:20px;opacity:0;animation:fadeUp 0.8s 1.1s forwards;flex-wrap:wrap}
+    .btn-p{background:linear-gradient(135deg,var(--accent1),var(--accent4));color:#fff;border:none;padding:14px 34px;border-radius:4px;font-family:var(--fc);font-size:0.82rem;cursor:none;transition:all 0.3s;text-decoration:none;display:inline-block;letter-spacing:1px;position:relative;overflow:hidden}
+    .btn-p::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--accent4),var(--accent2));opacity:0;transition:opacity 0.3s}
+    .btn-p:hover::after{opacity:1}
+    .btn-p:hover{transform:translateY(-3px);box-shadow:0 12px 35px rgba(88,166,255,0.35)}
+    .btn-p span{position:relative;z-index:1}
+    .btn-s{background:transparent;color:var(--text);border:1px solid rgba(255,255,255,0.15);padding:14px 34px;border-radius:4px;font-family:var(--fc);font-size:0.82rem;cursor:none;transition:all 0.3s;text-decoration:none;display:inline-block;letter-spacing:1px}
+    .btn-s:hover{border-color:var(--accent1);color:var(--accent1);transform:translateY(-3px)}
+    .hero-scroll-hint{position:absolute;bottom:44px;left:64px;display:flex;align-items:center;gap:14px;opacity:0;animation:fadeUp 0.8s 1.4s forwards}
+    .scroll-line{width:55px;height:1px;background:var(--text2);animation:spulse 2.5s ease-in-out infinite}
+    @keyframes spulse{0%,100%{opacity:0.25}50%{opacity:1}}
+    .scroll-word{font-family:var(--fc);font-size:0.68rem;color:var(--text2);letter-spacing:4px;writing-mode:vertical-rl}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+
+    /* STATS */
+    .stats-bar{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:28px 64px;display:flex;justify-content:space-between;align-items:center}
+    .stat-item{text-align:center}
+    .stat-n{font-family:var(--fd);font-size:2.1rem;font-weight:700;background:linear-gradient(120deg,var(--accent1),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .stat-l{font-family:var(--fc);font-size:0.7rem;color:var(--text2);letter-spacing:2.5px;margin-top:5px}
+    .stat-div{width:1px;height:54px;background:var(--border)}
+
+    /* SHARED SECTION STYLES */
+    section{padding:120px 64px}
+    .sh{margin-bottom:72px}
+    .slabel{font-family:var(--fc);font-size:0.78rem;color:var(--accent2);letter-spacing:5px;margin-bottom:16px;display:flex;align-items:center;gap:14px}
+    .slabel::after{content:'';width:60px;height:1px;background:var(--accent2)}
+    .stitle{font-family:var(--fd);font-size:clamp(1.8rem,3.5vw,3rem);font-weight:700;letter-spacing:-0.5px;line-height:1.2}
+
+    /* FADE-IN ON SCROLL */
+    .fi{opacity:0;transform:translateY(36px);transition:opacity 0.9s ease,transform 0.9s ease}
+    .fi.v{opacity:1;transform:translateY(0)}
+
+    /* ABOUT */
+    #about{display:grid;grid-template-columns:1fr 1fr;gap:90px;align-items:center}
+    .aimg-wrap{position:relative;width:420px;height:520px}
+    .aimg{width:100%;height:100%;object-fit:cover;border-radius:6px;position:relative;z-index:2;filter:saturate(0.85) contrast(1.05)}
+    .aimg-border{position:absolute;top:18px;left:18px;width:100%;height:100%;border:2px solid var(--accent1);border-radius:6px;z-index:1;transition:all 0.35s ease}
+    .aimg-wrap:hover .aimg-border{top:10px;left:10px}
+    .aimg-overlay{position:absolute;inset:0;z-index:3;border-radius:6px;background:linear-gradient(135deg,rgba(88,166,255,0.08),rgba(163,113,247,0.08));opacity:0;transition:opacity 0.35s}
+    .aimg-wrap:hover .aimg-overlay{opacity:1}
+    .abadge{position:absolute;bottom:-18px;right:-18px;background:var(--surface);border:1px solid var(--border);padding:16px 20px;border-radius:8px;z-index:4;backdrop-filter:blur(12px)}
+    .abadge-n{font-family:var(--fd);font-size:1.7rem;font-weight:900;color:var(--accent1)}
+    .abadge-t{font-family:var(--fc);font-size:0.65rem;color:var(--text2);letter-spacing:2px}
+    .atext{color:var(--text2);line-height:1.92;font-size:0.98rem;margin-bottom:22px}
+    .tech-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:32px}
+    .titem{font-family:var(--fc);font-size:0.78rem;color:var(--text2);display:flex;align-items:center;gap:9px}
+    .titem::before{content:'▸';color:var(--accent2);font-size:0.65rem}
+
+    /* TERMINAL */
+    .terminal{background:rgba(0,0,0,0.55);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-top:44px}
+    .term-head{background:rgba(255,255,255,0.04);padding:11px 16px;display:flex;align-items:center;gap:8px}
+    .td{width:11px;height:11px;border-radius:50%}
+    .td-r{background:#ff5f57}.td-y{background:#febc2e}.td-g{background:#28c840}
+    .term-title{font-family:var(--fc);font-size:0.72rem;color:var(--text2);margin-left:10px}
+    .term-body{padding:22px 24px;font-family:var(--fc);font-size:0.82rem;line-height:2.1}
+    .tl{display:flex;gap:12px}
+    .tp{color:var(--accent2)}.tc{color:var(--accent1)}.to{color:var(--text2);padding-left:22px}.tcm{color:rgba(255,255,255,0.2)}
+
+    /* SKILLS */
+    #skills{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .sk-wrap{display:grid;grid-template-columns:1fr 1fr;gap:70px}
+    .sg-title{font-family:var(--fd);font-size:0.72rem;color:var(--accent1);letter-spacing:3px;margin-bottom:32px}
+    .sbw{margin-bottom:22px}
+    .sbh{display:flex;justify-content:space-between;margin-bottom:9px}
+    .sbn{font-family:var(--fc);font-size:0.82rem;color:var(--text)}
+    .sbp{font-family:var(--fc);font-size:0.78rem;color:var(--accent2)}
+    .sb{height:3px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden}
+    .sbf{height:100%;background:linear-gradient(90deg,var(--accent1),var(--accent2));width:0;transition:width 1.6s cubic-bezier(0.23,1,0.32,1)}
+    .hex-grid{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+    .hex{background:var(--bg);border:1px solid var(--border);padding:9px 15px;border-radius:4px;font-family:var(--fc);font-size:0.73rem;color:var(--text2);transition:all 0.3s;cursor:default}
+    .hex:hover{border-color:var(--accent1);color:var(--accent1);transform:translateY(-2px);box-shadow:0 4px 20px rgba(88,166,255,0.18)}
+
+    /* PROJECTS */
+    .proj-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+    .pcard{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;transition:all 0.4s cubic-bezier(0.23,1,0.32,1);position:relative}
+    .pcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent1),var(--accent4),var(--accent2));transform:scaleX(0);transform-origin:left;transition:transform 0.4s ease;z-index:2}
+    .pcard:hover::before{transform:scaleX(1)}
+    .pcard:hover{transform:translateY(-9px);border-color:rgba(88,166,255,0.25);box-shadow:0 24px 70px rgba(0,0,0,0.5)}
+    .pimg{width:100%;height:195px;object-fit:cover;display:block;transition:filter 0.4s}
+    .pcard:hover .pimg{filter:brightness(1.1) saturate(1.1)}
+    .pbody{padding:26px}
+    .pnum{font-family:var(--fd);font-size:0.65rem;color:var(--accent2);letter-spacing:4px;margin-bottom:11px}
+    .pname{font-family:var(--fd);font-size:0.92rem;font-weight:700;margin-bottom:11px;letter-spacing:1px}
+    .pdesc{font-family:var(--fc);font-size:0.77rem;color:var(--text2);line-height:1.75;margin-bottom:18px}
+    .ptags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px}
+    .ptag{background:rgba(88,166,255,0.09);color:var(--accent1);padding:3px 10px;border-radius:3px;font-family:var(--fc);font-size:0.67rem;letter-spacing:0.5px}
+    .plinks{display:flex;gap:16px}
+    .plink{font-family:var(--fc);font-size:0.72rem;color:var(--text2);text-decoration:none;display:flex;align-items:center;gap:6px;transition:color 0.3s}
+    .plink:hover{color:var(--accent1)}
+
+    /* CONTRIBUTION GRAPH */
+    #contributions{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .contrib-wrap{overflow-x:auto;padding-bottom:8px}
+    .cgraph{display:flex;gap:4px}
+    .ccol{display:flex;flex-direction:column;gap:4px}
+    .ccell{width:13px;height:13px;border-radius:2px;background:rgba(255,255,255,0.04);cursor:default;transition:transform 0.2s}
+    .ccell:hover{transform:scale(1.5)}
+    .ccell[data-l="1"]{background:rgba(88,166,255,0.18)}
+    .ccell[data-l="2"]{background:rgba(88,166,255,0.38)}
+    .ccell[data-l="3"]{background:rgba(88,166,255,0.62)}
+    .ccell[data-l="4"]{background:rgba(88,166,255,0.9)}
+    .contrib-legend{display:flex;align-items:center;gap:6px;margin-top:16px;font-family:var(--fc);font-size:0.7rem;color:var(--text2)}
+    .cl{width:13px;height:13px;border-radius:2px}
+
+    /* CONTACT */
+    #contact{text-align:center;max-width:680px;margin:0 auto}
+    #contact .slabel{justify-content:center}
+    #contact .slabel::after{display:none}
+    .c-big-text{color:var(--text2);font-family:var(--fc);font-size:0.95rem;line-height:1.9;max-width:480px;margin:0 auto 52px}
+    .c-email{font-family:var(--fd);font-size:clamp(1.1rem,2.8vw,2rem);color:var(--accent1);text-decoration:none;letter-spacing:2px;position:relative;display:inline-block;margin-bottom:52px;transition:all 0.3s}
+    .c-email::after{content:'';position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);width:0;height:1px;background:var(--accent1);transition:width 0.3s}
+    .c-email:hover::after{width:100%}
+    .c-email:hover{text-shadow:0 0 30px rgba(88,166,255,0.5)}
+    .socials{display:flex;justify-content:center;gap:16px}
+    .slink{width:48px;height:48px;border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--text2);transition:all 0.3s;text-decoration:none}
+    .slink:hover{border-color:var(--accent1);color:var(--accent1);transform:translateY(-5px);box-shadow:0 8px 24px rgba(88,166,255,0.2)}
+
+    /* FOOTER */
+    footer{padding:30px 64px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+    .flogo{font-family:var(--fd);font-weight:900;font-size:0.95rem;letter-spacing:3px;background:linear-gradient(120deg,var(--accent1),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .ftext{font-family:var(--fc);font-size:0.72rem;color:var(--text2)}
+
+    /* SECTION DIVIDER */
+    .divider{height:1px;background:var(--border);margin:0}
+
+    /* RESPONSIVE */
+    @media(max-width:960px){
+      nav,section,footer,.stats-bar{padding-left:24px;padding-right:24px}
+      #about{grid-template-columns:1fr}
+      .aimg-wrap{width:100%;height:300px}
+      .proj-grid{grid-template-columns:1fr 1fr}
+      .sk-wrap{grid-template-columns:1fr}
+    }
+    @media(max-width:640px){
+      .nav-links{display:none}
+      .proj-grid{grid-template-columns:1fr}
+      .stats-bar{flex-wrap:wrap;gap:24px}
+    }
+  </style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<div id="progress"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo">TARUN.DEV</div>
+  <ul class="nav-links">
+    <li><a href="#about"><span>01</span>About</a></li>
+    <li><a href="#skills"><span>02</span>Skills</a></li>
+    <li><a href="#projects"><span>03</span>Projects</a></li>
+    <li><a href="#contributions"><span>04</span>Activity</a></li>
+    <li><a href="#contact"><span>05</span>Contact</a></li>
+  </ul>
+  <button class="nav-btn" onclick="window.open('https://github.com','_blank')">⟶ GitHub</button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-content">
+    <p class="hero-label">// HELLO WORLD · WELCOME TO MY PORTFOLIO</p>
+    <h1 class="hero-title">
+      <span class="t1">I BUILD THINGS FOR</span>
+      <span class="t2"><span class="glitch" data-text="THE INTERNET.">THE INTERNET.</span></span>
+    </h1>
+    <p class="hero-sub">&gt;&nbsp;<span id="type-el" class="type-cursor"></span></p>
+    <p class="hero-desc">
+      Full-stack developer &amp; open-source enthusiast. I craft digital
+      experiences that live at the intersection of clean code and
+      thoughtful design. Currently pursuing MCA at IGNOU.
+    </p>
+    <div class="hero-btns">
+      <a href="#projects" class="btn-p"><span>View My Work</span></a>
+      <a href="#contact"  class="btn-s">Get In Touch</a>
+    </div>
+  </div>
+  <div class="hero-scroll-hint">
+    <div class="scroll-line"></div>
+    <span class="scroll-word">SCROLL</span>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar fi">
+  <div class="stat-item"><div class="stat-n counter" data-t="52">0</div><div class="stat-l">REPOSITORIES</div></div>
+  <div class="stat-div"></div>
+  <div class="stat-item"><div class="stat-n counter" data-t="1340">0</div><div class="stat-l">COMMITS</div></div>
+  <div class="stat-div"></div>
+  <div class="stat-item"><div class="stat-n counter" data-t="284">0</div><div class="stat-l">STARS EARNED</div></div>
+  <div class="stat-div"></div>
+  <div class="stat-item"><div class="stat-n counter" data-t="23">0</div><div class="stat-l">PULL REQUESTS</div></div>
+  <div class="stat-div"></div>
+  <div class="stat-item"><div class="stat-n counter" data-t="3">0</div><div class="stat-l">YEARS CODING</div></div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <!-- IMAGE COLUMN -->
+  <div class="fi">
+    <div class="aimg-wrap">
+      <!--
+        IMAGE 1: Developer working at a computer — Unsplash (Bram Naus)
+        URL: https://images.unsplash.com/photo-1607743386760-88ac62b89b8a
+      -->
+      <img class="aimg"
+           src="https://images.unsplash.com/photo-1607743386760-88ac62b89b8a?w=600&auto=format&fit=crop&q=80"
+           alt="Developer at computer" loading="lazy">
+      <div class="aimg-border"></div>
+      <div class="aimg-overlay"></div>
+      <div class="abadge">
+        <div class="abadge-n">3+</div>
+        <div class="abadge-t">YEARS EXP</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TEXT COLUMN -->
+  <div class="fi" style="transition-delay:0.15s">
+    <div class="sh">
+      <div class="slabel">01 — ABOUT ME</div>
+      <h2 class="stitle">Crafting Code,<br>One Commit at a Time</h2>
+    </div>
+    <p class="atext">
+      I'm a passionate developer who loves building full-stack web apps, contributing
+      to open-source, and pushing commits at 2 AM. Currently pursuing my MCA at IGNOU
+      while working on real-world projects.
+    </p>
+    <p class="atext">
+      My workflow revolves around clean architecture, readable code, and meaningful
+      user experiences. I believe every line of code is a conversation with the next
+      developer who reads it.
+    </p>
+
+    <div class="terminal">
+      <div class="term-head">
+        <div class="td td-r"></div><div class="td td-y"></div><div class="td td-g"></div>
+        <span class="term-title">~/portfolio — zsh</span>
+      </div>
+      <div class="term-body">
+        <div class="tl"><span class="tp">❯</span><span class="tc">whoami</span></div>
+        <div class="tl to">Tarun · Full-Stack Developer · Open Source Enthusiast</div>
+        <div class="tl"><span class="tp">❯</span><span class="tc">cat interests.txt</span></div>
+        <div class="tl to">Python, Web Dev, Databases, AI/ML, Linux, Open-Source</div>
+        <div class="tl"><span class="tp">❯</span><span class="tcm"># latest commits...</span></div>
+        <div class="tl"><span class="tp">❯</span><span class="tc">git log --oneline -3</span></div>
+        <div class="tl to">a3f9d21 feat: add MySQL SELECTION_DB module</div>
+        <div class="tl to">b71c3e8 fix: descriptive stats pipeline</div>
+        <div class="tl to">9dc4a12 docs: update project README</div>
+        <div class="tl"><span class="tp">❯</span><span class="tc" style="border-right:2px solid var(--accent2);animation:blink 0.75s infinite">_</span></div>
+      </div>
+    </div>
+
+    <div class="tech-grid">
+      <div class="titem">Python &amp; Django</div>
+      <div class="titem">JavaScript / Node.js</div>
+      <div class="titem">React &amp; Next.js</div>
+      <div class="titem">MySQL / PostgreSQL</div>
+      <div class="titem">Linux &amp; Bash</div>
+      <div class="titem">Docker &amp; Git</div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="sh fi">
+    <div class="slabel">02 — SKILLS</div>
+    <h2 class="stitle">The Tech Stack</h2>
+  </div>
+  <div class="sk-wrap">
+    <div class="fi">
+      <div class="sg-title">PROFICIENCY</div>
+      <div class="sbw"><div class="sbh"><span class="sbn">Python</span><span class="sbp">92%</span></div><div class="sb"><div class="sbf" data-w="92"></div></div></div>
+      <div class="sbw"><div class="sbh"><span class="sbn">JavaScript</span><span class="sbp">85%</span></div><div class="sb"><div class="sbf" data-w="85"></div></div></div>
+      <div class="sbw"><div class="sbh"><span class="sbn">MySQL / SQL</span><span class="sbp">88%</span></div><div class="sb"><div class="sbf" data-w="88"></div></div></div>
+      <div class="sbw"><div class="sbh"><span class="sbn">React</span><span class="sbp">78%</span></div><div class="sb"><div class="sbf" data-w="78"></div></div></div>
+      <div class="sbw"><div class="sbh"><span class="sbn">Node.js</span><span class="sbp">80%</span></div><div class="sb"><div class="sbf" data-w="80"></div></div></div>
+      <div class="sbw"><div class="sbh"><span class="sbn">Docker / DevOps</span><span class="sbp">65%</span></div><div class="sb"><div class="sbf" data-w="65"></div></div></div>
+      <div class="sbw"><div class="sbh"><span class="sbn">Data Science / ML</span><span class="sbp">72%</span></div><div class="sb"><div class="sbf" data-w="72"></div></div></div>
+    </div>
+    <div class="fi" style="transition-delay:0.15s">
+      <div class="sg-title">TOOLS &amp; TECHNOLOGIES</div>
+      <div class="hex-grid">
+        <div class="hex">Git &amp; GitHub</div><div class="hex">VS Code</div>
+        <div class="hex">Linux / Bash</div><div class="hex">PostgreSQL</div>
+        <div class="hex">Django REST</div><div class="hex">FastAPI</div>
+        <div class="hex">Pandas</div><div class="hex">NumPy</div>
+        <div class="hex">Matplotlib</div><div class="hex">TailwindCSS</div>
+        <div class="hex">REST APIs</div><div class="hex">WebSockets</div>
+        <div class="hex">Redis</div><div class="hex">AWS EC2</div>
+        <div class="hex">Nginx</div><div class="hex">CI / CD</div>
+        <div class="hex">Jupyter</div><div class="hex">Scikit-learn</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="sh fi">
+    <div class="slabel">03 — PROJECTS</div>
+    <h2 class="stitle">Things I've Built</h2>
+  </div>
+
+  <div class="proj-grid">
+
+    <!-- PROJECT 1 -->
+    <div class="pcard fi">
+      <!--
+        IMAGE 2: Code on screen (dark theme) — Unsplash (Chris Ried)
+        URL: https://images.unsplash.com/photo-1555949963-ff9fe0c870eb
+      -->
+      <img class="pimg"
+           src="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=700&auto=format&fit=crop&q=80"
+           alt="MySQL Database project" loading="lazy">
+      <div class="pbody">
+        <div class="pnum">PROJECT 001</div>
+        <div class="pname">SELECTION DB SYSTEM</div>
+        <p class="pdesc">A MySQL-based employee selection database with full CRUD operations, complex queries, stored procedures, and a Python connector.</p>
+        <div class="ptags"><span class="ptag">Python</span><span class="ptag">MySQL</span><span class="ptag">SQLAlchemy</span></div>
+        <div class="plinks">
+          <a href="#" class="plink">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            GitHub
+          </a>
+          <a href="#" class="plink">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Live Demo
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECT 2 -->
+    <div class="pcard fi" style="transition-delay:0.1s">
+      <!--
+        IMAGE 3: Data analytics dashboard — Unsplash (Luke Chesser)
+        URL: https://images.unsplash.com/photo-1551288049-bebda4e38f71
+      -->
+      <img class="pimg"
+           src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=700&auto=format&fit=crop&q=80"
+           alt="Data Analysis project" loading="lazy">
+      <div class="pbody">
+        <div class="pnum">PROJECT 002</div>
+        <div class="pname">DATA ANALYSIS SUITE</div>
+        <p class="pdesc">Descriptive statistics and visualization pipeline using pandas, numpy, and matplotlib with CSV data ingestion and automated reporting.</p>
+        <div class="ptags"><span class="ptag">Python</span><span class="ptag">Pandas</span><span class="ptag">Matplotlib</span></div>
+        <div class="plinks">
+          <a href="#" class="plink">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            GitHub
+          </a>
+          <a href="#" class="plink">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Notebook
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECT 3 -->
+    <div class="pcard fi" style="transition-delay:0.2s">
+      <!--
+        IMAGE 4: JavaScript / web development — Unsplash (Pankaj Patel)
+        URL: https://images.unsplash.com/photo-1627398242454-45a1465c2479
+      -->
+      <img class="pimg"
+           src="https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=700&auto=format&fit=crop&q=80"
+           alt="Full Stack Web App" loading="lazy">
+      <div class="pbody">
+        <div class="pnum">PROJECT 003</div>
+        <div class="pname">FULL STACK WEB APP</div>
+        <p class="pdesc">A modern full-stack application with JWT authentication, real-time WebSocket updates, and a RESTful API consumed by a React SPA.</p>
+        <div class="ptags"><span class="ptag">React</span><span class="ptag">Node.js</span><span class="ptag">MongoDB</span></div>
+        <div class="plinks">
+          <a href="#" class="plink">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            GitHub
+          </a>
+          <a href="#" class="plink">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Live Demo
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECT 4 -->
+    <div class="pcard fi" style="transition-delay:0.3s">
+      <!--
+        IMAGE 5: Algorithm / abstract data — Unsplash (Markus Spiske)
+        URL: https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3
+      -->
+      <img class="pimg"
+           src="https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=700&auto=format&fit=crop&q=80"
+           alt="Algorithm Visualizer" loading="lazy">
+      <div class="pbody">
+        <div class="pnum">PROJECT 004</div>
+        <div class="pname">ALGO VISUALIZER</div>
+        <p class="pdesc">Interactive visualization of sorting &amp; graph algorithms with step-by-step canvas animations, speed control, and Big-O analysis panel.</p>
+        <div class="ptags"><span class="ptag">JavaScript</span><span class="ptag">Canvas API</span><span class="ptag">CSS3</span></div>
+        <div class="plinks">
+          <a href="#" class="plink">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            GitHub
+          </a>
+          <a href="#" class="plink">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Live Demo
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECT 5 -->
+    <div class="pcard fi" style="transition-delay:0.4s">
+      <!--
+        IMAGE 6: Machine learning / neural network — Unsplash (Possessed Photography)
+        URL: https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2
+      -->
+      <img class="pimg"
+           src="https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?w=700&auto=format&fit=crop&q=80"
+           alt="ML Classifier project" loading="lazy">
+      <div class="pbody">
+        <div class="pnum">PROJECT 005</div>
+        <div class="pname">ML TEXT CLASSIFIER</div>
+        <p class="pdesc">Text classification model using scikit-learn with TF-IDF preprocessing, cross-validation, confusion matrix, and a Flask inference API.</p>
+        <div class="ptags"><span class="ptag">Python</span><span class="ptag">Scikit-learn</span><span class="ptag">NLP</span></div>
+        <div class="plinks">
+          <a href="#" class="plink">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            GitHub
+          </a>
+          <a href="#" class="plink">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Notebook
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECT 6 -->
+    <div class="pcard fi" style="transition-delay:0.5s">
+      <!--
+        IMAGE 7: Terminal / Linux — Unsplash (Markus Spiske / neonbrand)
+        URL: https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5
+      -->
+      <img class="pimg"
+           src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=700&auto=format&fit=crop&q=80"
+           alt="Linux Automation project" loading="lazy">
+      <div class="pbody">
+        <div class="pnum">PROJECT 006</div>
+        <div class="pname">LINUX AUTOMATION</div>
+        <p class="pdesc">Shell scripts and Python tools for Linux sysadmin tasks — backup pipelines, log monitoring, health dashboards, and cron job orchestration.</p>
+        <div class="ptags"><span class="ptag">Bash</span><span class="ptag">Python</span><span class="ptag">Cron</span></div>
+        <div class="plinks">
+          <a href="#" class="plink">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            GitHub
+          </a>
+          <a href="#" class="plink">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Docs
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTRIBUTIONS -->
+<section id="contributions">
+  <div class="sh fi">
+    <div class="slabel">04 — ACTIVITY</div>
+    <h2 class="stitle">GitHub Contributions</h2>
+  </div>
+  <div class="contrib-wrap fi">
+    <div class="cgraph" id="cgraph"></div>
+    <div class="contrib-legend">
+      <span>Less</span>
+      <div class="cl" style="background:rgba(255,255,255,0.04)"></div>
+      <div class="cl" style="background:rgba(88,166,255,0.18)"></div>
+      <div class="cl" style="background:rgba(88,166,255,0.38)"></div>
+      <div class="cl" style="background:rgba(88,166,255,0.62)"></div>
+      <div class="cl" style="background:rgba(88,166,255,0.9)"></div>
+      <span>More</span>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" style="padding:120px 0">
+  <div class="sh fi">
+    <div class="slabel">05 — CONTACT</div>
+    <h2 class="stitle">Let's Build Something</h2>
+  </div>
+  <p class="c-big-text fi">
+    I'm currently open to new opportunities and exciting collaborations.
+    Whether it's a project, question, or just a hello — my inbox is
+    always open.
+  </p>
+  <a href="mailto:tarun@example.com" class="c-email fi">tarun@example.com</a>
+  <div class="socials fi">
+    <!-- GitHub -->
+    <a href="https://github.com" target="_blank" class="slink" title="GitHub">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+    </a>
+    <!-- LinkedIn -->
+    <a href="#" target="_blank" class="slink" title="LinkedIn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+    </a>
+    <!-- X / Twitter -->
+    <a href="#" target="_blank" class="slink" title="X / Twitter">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+    </a>
+    <!-- Email -->
+    <a href="mailto:tarun@example.com" class="slink" title="Email">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="flogo">TARUN.DEV</div>
+  <div class="ftext">
+    <span style="color:var(--accent2)">git commit</span> -m "Built with ❤️ &amp; too much coffee"
+  </div>
+  <div class="ftext">© 2026 · All Rights Reserved</div>
+</footer>
+
+<script>
+/* ======================== CURSOR ======================== */
+const cur = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.cssText=`left:${mx-5}px;top:${my-5}px`});
+(function animRing(){rx+=(mx-rx-17)*0.12;ry+=(my-ry-17)*0.12;ring.style.cssText=`left:${rx}px;top:${ry}px`;requestAnimationFrame(animRing)})();
+document.querySelectorAll('a,button,.hex,.ccell').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.style.transform='scale(2)';ring.style.cssText+=';width:58px;height:58px;border-color:var(--accent2)'});
+  el.addEventListener('mouseleave',()=>{cur.style.transform='scale(1)';ring.style.cssText+=';width:34px;height:34px;border-color:var(--accent1)'});
+});
+
+/* ======================== SCROLL PROGRESS ======================== */
+const pb=document.getElementById('progress');
+window.addEventListener('scroll',()=>{pb.style.width=(window.scrollY/(document.body.scrollHeight-window.innerHeight)*100)+'%'});
+
+/* ======================== NAV ======================== */
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',window.scrollY>80));
+
+/* ======================== HERO CANVAS PARTICLES ======================== */
+const cv=document.getElementById('hero-canvas'),ctx=cv.getContext('2d');
+function resize(){cv.width=innerWidth;cv.height=innerHeight;}resize();
+window.addEventListener('resize',resize);
+const pts=Array.from({length:110},()=>({
+  x:Math.random()*innerWidth,y:Math.random()*innerHeight,
+  dx:(Math.random()-.5)*.35,dy:(Math.random()-.5)*.35,
+  r:Math.random()*1.4+0.4,
+  color:['#58a6ff','#a371f7','#00e87a'][Math.floor(Math.random()*3)],
+  a:Math.random()*.5+0.1
+}));
+function draw(){
+  ctx.clearRect(0,0,cv.width,cv.height);
+  pts.forEach(p=>{
+    p.x+=p.dx;p.y+=p.dy;
+    if(p.x<0||p.x>cv.width)p.dx*=-1;
+    if(p.y<0||p.y>cv.height)p.dy*=-1;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=p.color+Math.floor(p.a*255).toString(16).padStart(2,'0');ctx.fill();
+  });
+  for(let a=0;a<pts.length;a++)for(let b=a+1;b<pts.length;b++){
+    const d=Math.hypot(pts[a].x-pts[b].x,pts[a].y-pts[b].y);
+    if(d<105){ctx.strokeStyle=`rgba(88,166,255,${.1*(1-d/105)})`;ctx.lineWidth=0.5;ctx.beginPath();ctx.moveTo(pts[a].x,pts[a].y);ctx.lineTo(pts[b].x,pts[b].y);ctx.stroke();}
+  }
+  requestAnimationFrame(draw);
+}draw();
+
+/* ======================== TYPEWRITER ======================== */
+const phrases=['Python Developer','Full-Stack Engineer','Open Source Contributor','Database Architect','Linux Enthusiast','IGNOU MCA Student'];
+let pi=0,ci=0,del=false;
+const tel=document.getElementById('type-el');
+(function type(){
+  const ph=phrases[pi];
+  tel.textContent=del?ph.slice(0,ci-1):ph.slice(0,ci+1);
+  del?ci--:ci++;
+  if(!del&&ci===ph.length){setTimeout(()=>{del=true;type();},2100);return;}
+  if(del&&ci===0){del=false;pi=(pi+1)%phrases.length;}
+  setTimeout(type,del?55:85);
+})();
+
+/* ======================== INTERSECTION OBSERVER ======================== */
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('v');
+      e.target.querySelectorAll('.sbf').forEach(b=>b.style.width=b.dataset.w+'%');
+    }
+  });
+},{threshold:0.12});
+document.querySelectorAll('.fi').forEach(el=>obs.observe(el));
+
+/* ======================== COUNTER ======================== */
+const cobs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting)return;
+    const el=e.target,target=+el.dataset.t;
+    let n=0;const step=Math.ceil(target/65);
+    const iv=setInterval(()=>{n=Math.min(n+step,target);el.textContent=n.toLocaleString();if(n>=target){el.textContent=target.toLocaleString()+(target>=10?'+':'');clearInterval(iv);}},18);
+    cobs.unobserve(el);
+  });
+},{threshold:0.4});
+document.querySelectorAll('.counter').forEach(el=>cobs.observe(el));
+
+/* ======================== CONTRIBUTION GRAPH ======================== */
+const cg=document.getElementById('cgraph');
+for(let w=0;w<52;w++){
+  const col=document.createElement('div');col.className='ccol';
+  for(let d=0;d<7;d++){
+    const cell=document.createElement('div');cell.className='ccell';
+    const r=Math.random();
+    const lv=r>.72?(r>.86?(r>.93?(r>.97?4:3):2):1):0;
+    if(lv)cell.dataset.l=lv;
+    col.appendChild(cell);
+  }
+  cg.appendChild(col);
+}
+</script>
+</body>
+</html>
